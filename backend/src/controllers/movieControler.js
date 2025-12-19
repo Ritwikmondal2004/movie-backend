@@ -23,8 +23,13 @@ const successResponseBody = {
 };
 const createMovie = async (req, res) => {
   try {
-    const movie = await MovieService.createMovie(req.body);
-    successResponseBody.data = movie;
+    const response = await MovieService.createMovie(req.body);
+    if(response.error){
+      errorResponseBody.error=response.error;
+      errorResponseBody.message="validation failed on few paramiters of request body"
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
     sucessResponseBody.message = "Successfully created movie";
     return res.status(201).json(successResponseBody);
   } catch (error) {

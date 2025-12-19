@@ -1,12 +1,26 @@
 const Movie = require("../models/movie.model");
 const createMovie = async (data) => {
-  const movie = await Movie.create(data);
+  try {
+    const movie = await Movie.create(data);
+    return movie;
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      let err = {};
+
+      Object.keys(error.error).forEach((key) => {
+        errors[key] = error.error[key].message;
+      });
+      console.log(err);
+      return { err: err, code: 422 };
+    } else {
+      throw error;
+    }
+  }
+};
+const deleteMovie = async (data) => {
+  const movie = await Movie.findByIdAndDelete(id);
   return movie;
 };
-const deleteMovie=async(data)=>{
-  const movie=await Movie.findByIdAndDelete(id);
-  return movie;
-}
 const getMovieid = async (id) => {
   const movie = await Movie.findById(id);
   console.log("movie found", movie);
