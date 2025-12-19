@@ -28,7 +28,7 @@ const createMovie = async (req, res) => {
     sucessResponseBody.message = "Successfully created movie";
     return res.status(201).json(successResponseBody);
   } catch (error) {
-    console.log(error.name);
+    console.log(error.name,error.description);
     return res.status(500).json(errorResponseBody);
   }
 };
