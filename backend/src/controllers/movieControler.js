@@ -1,5 +1,9 @@
 const Movie = require("../models/movie.model");
 const MovieService = require("../services/movie.service");
+const {
+  successResponseBody,
+  errorResponseBody,
+} = require("../utils/responseBody");
 /**
  * controlers function to create a new movie
  * @returns movie created
@@ -19,23 +23,13 @@ const successResponseBody = {
 };
 const createMovie = async (req, res) => {
   try {
-    const movie = await Movie.create(req.body);
-
-    return res.status(201).json({
-      success: true,
-      err: {},
-      data: movie,
-      message: "Successfully created movie",
-    });
+    const movie = await MovieService.createMovie(req.body);
+    successResponseBody.data = movie;
+    sucessResponseBody.message = "Successfully created movie";
+    return res.status(201).json(successResponseBody);
   } catch (error) {
-    console.error("createMovie error:", error);
-
-    return res.status(400).json({
-      success: false,
-      err: { message: error.message },
-      data: {},
-      message: "Malformed Request",
-    });
+    console.log(error.name);
+    return res.status(500).json(errorResponseBody);
   }
 };
 
@@ -60,9 +54,7 @@ const getMovie = async (req, res) => {
 };
 const deleteMovie = async (req, res) => {
   try {
-    const response = await Movie.deleteOne({
-      _id: req.params.movieId,
-    });
+    const response = await MovieService.deleteMovie(req.params.id);
 
     return res.status(200).json({
       success: true,

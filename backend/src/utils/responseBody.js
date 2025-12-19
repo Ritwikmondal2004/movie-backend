@@ -11,9 +11,7 @@ const successResponseBody = {
   sucess: true,
 };
 
-
-module.exports={
-    successResponseBody,
-    errorResponseBody
-
-}
+module.exports = {
+  successResponseBody,
+  errorResponseBody,
+};
