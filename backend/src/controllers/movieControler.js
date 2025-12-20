@@ -79,8 +79,13 @@ const deleteMovie = async (req, res) => {
 };
 const updateMovie=async(req,res)=>{
   try{
-    const movie=await MovieService.updateMovie(req.params.id,req.body);
-    successResponseBody.data=movie;
+    const response=await MovieService.updateMovie(req.params.id,req.body);
+    if(response.err){
+      errorResponseBody.err=response.err;
+      errorResponseBody.message="validation failed on few paramiters of request body"
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data=response;
     return res.status(200).json(successResponseBody);
   }catch(error){
     console.log(error);

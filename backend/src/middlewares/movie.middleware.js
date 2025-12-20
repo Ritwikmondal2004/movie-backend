@@ -5,7 +5,7 @@ const buildBadRequest = (message) => ({
   message: "Malformed Request | Bad Request",
 });
 
-const validateCreateMovieRequest = (req, res, next) => {
+const validateCreateMovieRequest = async (req, res, next) => {
   // name
   if (!req.body.name) {
     return res
