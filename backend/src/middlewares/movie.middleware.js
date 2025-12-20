@@ -28,12 +28,14 @@ const validateCreateMovieRequest = async (req, res, next) => {
   }
 
   // casts (FORM-DATA SAFE)
-  if (!req.body.casts) {
+  if (
+    !req.body.casts ||
+    !(req.body.casts instanceof Array) ||
+    req.body.casts.length === 0
+  ) {
     return res
       .status(400)
-      .json(
-        buildBadRequest("The casts of the movie is not present in the request")
-      );
+      .json(buildBadRequest("The cast of the movie is required"));
   }
 
   // convert string → array

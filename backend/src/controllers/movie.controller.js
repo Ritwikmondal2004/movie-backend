@@ -66,9 +66,30 @@ const deleteMovie = async (req, res) => {
   }
 };
 
+const updateMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    return res.status(200).json({
+      success: true,
+      error: {},
+      data: movie,
+      message: "successfully updated movie details",
+    });
+  } catch (error) {
+    console.error("updateMovie error:", error);
+    return res.status(500).json({
+      success: false,
+      error: { message: error.message || "internal server error" },
+      message: "something went wrong while updating movie",
+      data: {},
+    });
+  }
+};
+
 module.exports = {
   createMovie,
   getMovie,
   deleteMovie,
+  updateMovie,
 };
 
