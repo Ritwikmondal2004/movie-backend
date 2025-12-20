@@ -77,8 +77,19 @@ const deleteMovie = async (req, res) => {
     });
   }
 };
+const updateMovie=async(req,res)=>{
+  try{
+    const movie=await MovieService.updateMovie(req.params.id,req.body);
+    successResponseBody.data=movie;
+    return res.status(200).json(successResponseBody);
+  }catch(error){
+    console.log(error);
+    return res.status(500).json(errorResponseBody);
+  }
+}
 module.exports = {
   createMovie,
   getMovie,
   deleteMovie,
+  updateMovie,
 };
