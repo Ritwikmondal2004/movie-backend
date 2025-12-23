@@ -1,17 +1,22 @@
-const errorResponseBody = {
-  err: {},
-  data: {},
-  message: "something went wrong",
-  success: false,
-};
-const successResponseBody = {
-  err: {},
-  data: {},
-  message: "Sucessfully fetched movie details",
-  sucess: true,
-};
+function createErrorResponse() {
+  return {
+    err: {},
+    data: {},
+    message: "something went wrong",
+    success: false,
+  };
+}
+
+function createSuccessResponse(message = "success") {
+  return {
+    err: {},
+    data: {},
+    message,
+    success: true,
+  };
+}
 
 module.exports = {
-  successResponseBody,
-  errorResponseBody,
+  createErrorResponse,
+  createSuccessResponse,
 };

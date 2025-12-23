@@ -1,100 +1,104 @@
-const Movie = require("../models/movie.model");
-const MovieService = require("../services/movie.service");
-const {
-  successResponseBody,
-  errorResponseBody,
-} = require("../utils/responseBody");
+const Movie = require('../models/movie.model');
+const movieService = require('../services/movie.service');
+const { createSuccessResponse, createErrorResponse } = require('../utils/responseBody');
+const { STATUS } = require('../utils/constants');
 /**
- * controlers function to create a new movie
+ * Controller function to create a new movie
  * @returns movie created
  */
-//controler function to create a new movie
-const errorResponseBody = {
-  err: {},
-  data: {},
-  message: "something went wrong",
-  success: false,
-};
-const successResponseBody = {
-  err: {},
-  data: {},
-  message: "Sucessfully fetched movie details",
-  sucess: true,
-};
+
+// controller function to create a new movie
 const createMovie = async (req, res) => {
-  try {
-    const response = await MovieService.createMovie(req.body);
-    if(response.error){
-      errorResponseBody.error=response.error;
-      errorResponseBody.message="validation failed on few paramiters of request body"
-      return res.status(response.code).json(errorResponseBody);
+    try {
+        const response = await movieService.createMovie(req.body);
+        const successResponseBody = createSuccessResponse("Successfully created the movie");
+        successResponseBody.data = response;
+
+        return res.status(STATUS.CREATED).json(successResponseBody);
+    } catch (error) {
+        const errorResponseBody = createErrorResponse();
+        if (error.err) {
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
-    successResponseBody.data = response;
-    sucessResponseBody.message = "Successfully created movie";
-    return res.status(201).json(successResponseBody);
-  } catch (error) {
-    console.log(error.name,error.description);
-    return res.status(500).json(errorResponseBody);
-  }
 };
+
+const deleteMovie = async (req, res) => {
+    try {
+        const response = await movieService.deleteMovie(req.params.id);
+        const successResponseBody = createSuccessResponse("Successfully deleted the movie");
+        successResponseBody.data = response;
+        return res.status(STATUS.OK).json(successResponseBody);
+    } catch (error) {
+        const errorResponseBody = createErrorResponse();
+        if (error.err) {
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+    }
+}
 
 const getMovie = async (req, res) => {
-  try {
-    const response = await MovieService.getMovieid(req.params.id);
-    if (response.err) {
-      errorResponseBody.err = response.err;
-      return res.status(response.code).json(errorResponseBody);
-    }
-    successResponseBody.data = response;
-    return res.status(200).json(successResponseBody);
-  } catch (error) {
-    console.log("get movie error:", error);
-    return res.status(500).json({
-      success: false,
-      error: { message: error.message || "internal server error" },
-      data: {},
-      message: "something went wrong",
-    });
-  }
-};
-const deleteMovie = async (req, res) => {
-  try {
-    const response = await MovieService.deleteMovie(req.params.id);
+    try {
+        const response = await movieService.getMovieid(req.params.id);
+        const successResponseBody = createSuccessResponse();
+        successResponseBody.data = response;
+        return res.status(STATUS.OK).json(successResponseBody);
 
-    return res.status(200).json({
-      success: true,
-      error: {},
-      data: response,
-      message: "successfully deleted movie details",
-    });
-  } catch (error) {
-    console.log("delete movie error:", error);
-    return res.status(500).json({
-      success: false,
-      error: error,
-      message: "something went wrong",
-      data: {},
-    });
-  }
-};
-const updateMovie=async(req,res)=>{
-  try{
-    const response=await MovieService.updateMovie(req.params.id,req.body);
-    if(response.err){
-      errorResponseBody.err=response.err;
-      errorResponseBody.message="validation failed on few paramiters of request body"
-      return res.status(response.code).json(errorResponseBody);
+    } catch (error) {
+        const errorResponseBody = createErrorResponse();
+        if (error.err) {
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
-    successResponseBody.data=response;
-    return res.status(200).json(successResponseBody);
-  }catch(error){
-    console.log(error);
-    return res.status(500).json(errorResponseBody);
-  }
 }
+
+const updateMovie = async (req, res) => {
+    try {
+        const response = await movieService.updateMovie(req.params.id, req.body);
+        const successResponseBody = createSuccessResponse();
+        successResponseBody.data = response;
+        return res.status(STATUS.OK).json(successResponseBody);
+    } catch (error) {
+        const errorResponseBody = createErrorResponse();
+        if (error.err) {
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+    }
+}
+
+const getMovies = async (req, res) => {
+    try {
+        const response = await movieService.fetchMovies(req.query);
+        const successResponseBody = createSuccessResponse();
+        successResponseBody.data = response;
+        return res.status(STATUS.OK).json(successResponseBody);
+    } catch (error) {
+        const errorResponseBody = createErrorResponse();
+        if (error.err) {
+            errorResponseBody.err = error.err;
+            return res.status(error.code).json(errorResponseBody);
+        }
+        errorResponseBody.err = error;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+    }
+}
+
 module.exports = {
-  createMovie,
-  getMovie,
-  deleteMovie,
-  updateMovie,
-};
+    createMovie,
+    deleteMovie,
+    getMovie,
+    updateMovie,
+    getMovies
+}

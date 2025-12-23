@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const MovieRoutes = require('./routes/movie.routes');
 dotenv.config();
-
+const threateRoutes=require('./routes/theatre.route');
 const app = express();
 
 // parse application/json
@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 // app.use(multer().none());
 
 MovieRoutes(app); // invoking movie routes
+threateRoutes(app); //involve threates
 
 app.get('/home', (req, res) => {
     console.log('enter the api');

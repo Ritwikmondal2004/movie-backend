@@ -1,4 +1,4 @@
-const Movie = require("../models/movie.model");
+const Movie = require("../src/models/movie.model");
 const createMovie = async (data) => {
   try {
     const movie = await Movie.create(data);
@@ -6,9 +6,8 @@ const createMovie = async (data) => {
   } catch (error) {
     if (error.name === "ValidationError") {
       let err = {};
-
-      Object.keys(error.error).forEach((key) => {
-        errors[key] = error.error[key].message;
+      Object.keys(error.errors).forEach((key) => {
+        err[key] = error.errors[key].message;
       });
       console.log(err);
       return { err: err, code: 422 };
@@ -17,7 +16,7 @@ const createMovie = async (data) => {
     }
   }
 };
-const deleteMovie = async (data) => {
+const deleteMovie = async (id) => {
   const movie = await Movie.findByIdAndDelete(id);
   return movie;
 };
@@ -36,7 +35,7 @@ const getMovieid = async (id) => {
 };
 const updateMovie = async (id, data) => {
   try {
-    const movie = await Movie.findByIdAndupdate(id, data, {
+    const movie = await Movie.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     });
@@ -44,9 +43,8 @@ const updateMovie = async (id, data) => {
   } catch (error) {
     if (error.name === "ValidationError") {
       let err = {};
-
-      Object.keys(error.error).forEach((key) => {
-        errors[key] = error.error[key].message;
+      Object.keys(error.errors).forEach((key) => {
+        err[key] = error.errors[key].message;
       });
       console.log(err);
       return { err: err, code: 422 };
@@ -55,9 +53,24 @@ const updateMovie = async (id, data) => {
     }
   }
 };
+const fetchMovies = async (filter = {}) => {
+  let query = {};
+  if (filter.name) {
+    query.name = filter.name;
+  }
+  let movies = await Movie.find(query);
+  if (!movies) {
+    return {
+      err: "Not able to find the queries movies",
+      code: 404,
+    };
+  }
+  return movies;
+};
 module.exports = {
   getMovieid,
   createMovie,
   deleteMovie,
   updateMovie,
+  fetchMovies,
 };

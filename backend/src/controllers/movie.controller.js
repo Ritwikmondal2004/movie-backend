@@ -86,10 +86,31 @@ const updateMovie = async (req, res) => {
   }
 };
 
+const getMovies = async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    return res.status(200).json({
+      success: true,
+      error: {},
+      data: movies,
+      message: "successfully fetched all movies",
+    });
+  } catch (error) {
+    console.error("getMovies error:", error);
+    return res.status(500).json({
+      success: false,
+      error: { message: error.message || "internal server error" },
+      message: "something went wrong while fetching movies",
+      data: {},
+    });
+  }
+};
+
 module.exports = {
   createMovie,
   getMovie,
   deleteMovie,
   updateMovie,
+  getMovies,
 };
 
