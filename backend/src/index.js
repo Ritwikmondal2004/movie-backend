@@ -1,11 +1,11 @@
-const bodyParser = require('body-parser');
-const express = require('express');
+const bodyParser = require("body-parser");
+const express = require("express");
 // const multer = require('multer');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const MovieRoutes = require('./routes/movie.routes');
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const MovieRoutes = require("./routes/movie.routes");
 dotenv.config();
-const threateRoutes=require('./routes/theatre.route');
+const threateRoutes = require("./routes/theatre.route");
 const app = express();
 
 // parse application/json
@@ -19,20 +19,20 @@ app.use(bodyParser.json());
 MovieRoutes(app); // invoking movie routes
 threateRoutes(app); //involve threates
 
-app.get('/home', (req, res) => {
-    console.log('enter the api');
-    return res.json({
-        success: true,
-        message: 'api is working',
-    });
+app.get("/home", (req, res) => {
+  console.log("enter the api");
+  return res.json({
+    success: true,
+    message: "api is working",
+  });
 });
 const PORT = Number(process.env.PORT) || 3000;
-app.listen(process.env.PORT, async () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-    try {
-        await mongoose.connect(process.env.MONGODB_URI);
-        console.log('Connected to the database');
-    } catch (error) {
-        console.log('Database connection failed', error);
-    }
+app.listen(PORT, async () => {
+  console.log(`Server is running on port ${PORT}`);
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("Connected to the database");
+  } catch (error) {
+    console.log("Database connection failed", error);
+  }
 });
